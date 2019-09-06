@@ -44,4 +44,32 @@ describe('Database Service Layer Test', () => {
             assert.strictEqual(connectToDatabaseCallback.callCount, 1);
         });
     });
+
+
+    describe('query', () => {
+        beforeEach(() => {
+            databaseServiceLayer.connectToDatabase(() => {});
+        });
+
+        it('should use the database connection to query the database', () => {
+            const queryString = 'This is some sql query';
+            const queryArgs = ['this is the first arg', 2];
+            const dbQueryCallback = sinon.spy();
+
+            databaseServiceLayer.query(queryString, queryArgs, dbQueryCallback);
+
+            assert.strictEqual(dbMocks.dbConnectionMock.query.callCount, 1);
+            assert.strictEqual(dbMocks.dbConnectionMock.query.args[0][0], queryString);
+            assert.strictEqual(dbMocks.dbConnectionMock.query.args[0][1], queryArgs);
+
+            let queryErr = 'this is some fake error';
+            let queryData = 'this is some fake data';
+            const queryCallback = dbMocks.dbConnectionMock.query.args[0][2];
+            queryCallback(queryErr, queryData);
+
+            assert.strictEqual(dbQueryCallback.callCount, 1);
+            assert.strictEqual(dbQueryCallback.args[0][0], queryErr);
+            assert.strictEqual(dbQueryCallback.args[0][1], queryData);
+        });
+    });
 });

@@ -1,8 +1,10 @@
 const mysql = require('mysql');
 const saintsStatsDbConfig = require('./saintsStatsDbConfig.json');
 
+let dbConnection;
+
 function connectToDatabase(callback) {
-    mysql.createConnection({
+    dbConnection = mysql.createConnection({
         host: saintsStatsDbConfig.endpoints.angularSaintsStatsDb,
         user: saintsStatsDbConfig.credentials.rdsSaintsStatsData.username,
         password: saintsStatsDbConfig.credentials.rdsSaintsStatsData.password,
@@ -12,6 +14,11 @@ function connectToDatabase(callback) {
     callback();
 }
 
+function query(sql, params, callback) {
+    dbConnection.query(sql, params, callback);
+}
+
 module.exports = {
-    connectToDatabase
+    connectToDatabase,
+    query
 };
