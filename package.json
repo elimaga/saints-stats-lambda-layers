@@ -1,0 +1,23 @@
+{
+  "name": "saints-stats-lambda-layers",
+  "version": "1.0.0",
+  "description": "Lambda layers for the saints stats project.",
+  "scripts": {
+    "test": "mocha ./test/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elimaga/saints-stats-lambda-layers.git"
+  },
+  "author": "Eli Magallanes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elimaga/saints-stats-lambda-layers/issues"
+  },
+  "homepage": "https://github.com/elimaga/saints-stats-lambda-layers#readme",
+  "devDependencies": {
+    "mocha": "^6.2.0",
+    "mockery": "^2.1.0",
+    "sinon": "^7.4.2"
+  }
+}

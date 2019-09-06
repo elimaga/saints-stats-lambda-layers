@@ -1,0 +1,11 @@
+{
+  "name": "database-service-layer",
+  "version": "1.0.0",
+  "description": "Lambda layer for handling database logic.",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mysql": "^2.17.1"
+  }
+}
