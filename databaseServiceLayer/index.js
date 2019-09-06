@@ -18,7 +18,14 @@ function query(sql, params, callback) {
     dbConnection.query(sql, params, callback);
 }
 
+function disconnectDb() {
+    if (dbConnection) {
+        dbConnection.end();
+    }
+}
+
 module.exports = {
     connectToDatabase,
-    query
+    query,
+    disconnectDb
 };

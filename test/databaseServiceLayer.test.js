@@ -45,7 +45,6 @@ describe('Database Service Layer Test', () => {
         });
     });
 
-
     describe('query', () => {
         beforeEach(() => {
             databaseServiceLayer.connectToDatabase(() => {});
@@ -70,6 +69,22 @@ describe('Database Service Layer Test', () => {
             assert.strictEqual(dbQueryCallback.callCount, 1);
             assert.strictEqual(dbQueryCallback.args[0][0], queryErr);
             assert.strictEqual(dbQueryCallback.args[0][1], queryData);
+        });
+    });
+
+    describe('disconnectDb', () => {
+        it('should disconnect from the database if there is a connection', () => {
+            databaseServiceLayer.connectToDatabase(() => {});
+
+            databaseServiceLayer.disconnectDb();
+
+            assert.strictEqual(dbMocks.dbConnectionMock.end.callCount, 1);
+        });
+
+        it('should not disconnect from the database if there is no connection', () => {
+            databaseServiceLayer.disconnectDb();
+
+            assert.strictEqual(dbMocks.dbConnectionMock.end.callCount, 0);
         });
     });
 });
