@@ -1,1 +1,4 @@
 .idea/
+databaseServiceLayer/saintsStatsDbConfig.json
+databaseServiceLayer/node_modules/
+node_modules/
