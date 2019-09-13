@@ -13,7 +13,7 @@ function dbMocks() {
             }
         }
     };
-    
+
     const dbConnectionMock = {
         query: sinon.spy(),
         end: sinon.spy()

@@ -1,17 +1,34 @@
 const mysql = require('mysql');
-const saintsStatsDbConfig = require('./saintsStatsDbConfig.json');
+const awsSdk = require('aws-sdk');
 
 let dbConnection;
 
 function connectToDatabase(callback) {
-    dbConnection = mysql.createConnection({
-        host: saintsStatsDbConfig.endpoints.angularSaintsStatsDb,
-        user: saintsStatsDbConfig.credentials.rdsSaintsStatsData.username,
-        password: saintsStatsDbConfig.credentials.rdsSaintsStatsData.password,
-        database: saintsStatsDbConfig.credentials.rdsSaintsStatsData.database
-    });
+    awsSdk.config.update({region: 'us-west-1'});
 
-    callback();
+    const ssm = new awsSdk.SSM();
+
+    const params = {
+        Names: ['saintsStatsDbConfig'],
+        WithDecryption: true
+    };
+    ssm.getParameters(params, (err, ssmData) => {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        const saintsStatsDbConfig = JSON.parse(ssmData.Parameters[0].Value);
+
+        dbConnection = mysql.createConnection({
+            host: saintsStatsDbConfig.endpoints.angularSaintsStatsDb,
+            user: saintsStatsDbConfig.credentials.rdsSaintsStatsData.username,
+            password: saintsStatsDbConfig.credentials.rdsSaintsStatsData.password,
+            database: saintsStatsDbConfig.credentials.rdsSaintsStatsData.database
+        });
+
+        callback();
+    });
 }
 
 function query(sql, params, callback) {
