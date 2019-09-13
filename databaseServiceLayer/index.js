@@ -12,8 +12,10 @@ function connectToDatabase(callback) {
         Names: ['saintsStatsDbConfig'],
         WithDecryption: true
     };
+    
     ssm.getParameters(params, (err, ssmData) => {
         if (err) {
+            console.log('Could not get parameters', err);
             callback(err);
             return;
         }
