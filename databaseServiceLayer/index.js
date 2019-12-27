@@ -3,15 +3,13 @@ const saintsStatsDbConfig = require('./saintsStatsDbConfig.json');
 
 let dbConnection;
 
-function connectToDatabase(callback) {
+function connectToDatabase() {
     dbConnection = mysql.createConnection({
         host: saintsStatsDbConfig.endpoints.angularSaintsStatsDb,
         user: saintsStatsDbConfig.credentials.rdsSaintsStatsData.username,
         password: saintsStatsDbConfig.credentials.rdsSaintsStatsData.password,
         database: saintsStatsDbConfig.credentials.rdsSaintsStatsData.database
     });
-
-    callback();
 }
 
 function query(sql, params, callback) {

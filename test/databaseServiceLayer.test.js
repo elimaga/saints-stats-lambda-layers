@@ -35,13 +35,11 @@ describe('Database Service Layer Test', () => {
                 password: dbMocks.saintsStatsDbConfigMock.credentials.rdsSaintsStatsData.password,
                 database: dbMocks.saintsStatsDbConfigMock.credentials.rdsSaintsStatsData.database
             };
-            const connectToDatabaseCallback = sinon.spy();
 
-            databaseServiceLayer.connectToDatabase(connectToDatabaseCallback);
+            databaseServiceLayer.connectToDatabase();
 
             assert.strictEqual(dbMocks.mySqlMock.createConnection.callCount, 1);
             assert.deepStrictEqual(dbMocks.mySqlMock.createConnection.args[0][0], expectedDatabaseConnectionData);
-            assert.strictEqual(connectToDatabaseCallback.callCount, 1);
         });
     });
 
