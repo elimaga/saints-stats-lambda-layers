@@ -12,8 +12,16 @@ function connectToDatabase() {
     });
 }
 
-function query(sql, params, callback) {
-    dbConnection.query(sql, params, callback);
+function query(sql, params) {
+    return new Promise((resolve, reject) => {
+        dbConnection.query(sql, params, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
 }
 
 function disconnectDb() {

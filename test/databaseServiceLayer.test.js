@@ -1,7 +1,6 @@
 const basedir = '../databaseServiceLayer';
 const assert = require('assert');
 const mockery = require('mockery');
-const sinon = require('sinon');
 const dbMocksConstructor = require('./mocks/dbMocks');
 
 describe('Database Service Layer Test', () => {
@@ -45,34 +44,57 @@ describe('Database Service Layer Test', () => {
 
     describe('query', () => {
         beforeEach(() => {
-            databaseServiceLayer.connectToDatabase(() => {});
+            databaseServiceLayer.connectToDatabase();
         });
 
-        it('should use the database connection to query the database', () => {
+        it('should use the database connection to query the database', (done) => {
             const queryString = 'This is some sql query';
             const queryArgs = ['this is the first arg', 2];
-            const dbQueryCallback = sinon.spy();
+            let queryData = 'this is some fake data';
 
-            databaseServiceLayer.query(queryString, queryArgs, dbQueryCallback);
+            databaseServiceLayer.query(queryString, queryArgs)
+                .then((data) => {
+                    assert.strictEqual(data, queryData);
+                    done();
+                })
+                .catch((err) => {
+                    assert.fail('This test should not throw an error: ' + err)
+                });
 
             assert.strictEqual(dbMocks.dbConnectionMock.query.callCount, 1);
             assert.strictEqual(dbMocks.dbConnectionMock.query.args[0][0], queryString);
             assert.strictEqual(dbMocks.dbConnectionMock.query.args[0][1], queryArgs);
 
-            let queryErr = 'this is some fake error';
-            let queryData = 'this is some fake data';
             const queryCallback = dbMocks.dbConnectionMock.query.args[0][2];
-            queryCallback(queryErr, queryData);
+            queryCallback(null, queryData);
+        });
 
-            assert.strictEqual(dbQueryCallback.callCount, 1);
-            assert.strictEqual(dbQueryCallback.args[0][0], queryErr);
-            assert.strictEqual(dbQueryCallback.args[0][1], queryData);
+        it('should return an error if the db query returned an error', (done) => {
+            const queryString = 'This is some sql query';
+            const queryArgs = ['this is the first arg', 2];
+            let queryErr = 'this is some fake error';
+
+            databaseServiceLayer.query(queryString, queryArgs)
+                .then((data) => {
+                    assert.fail('This test should have thrown an error: ' + data)
+                })
+                .catch((err) => {
+                    assert.equal(err, queryErr)
+                    done();
+                });
+
+            assert.strictEqual(dbMocks.dbConnectionMock.query.callCount, 1);
+            assert.strictEqual(dbMocks.dbConnectionMock.query.args[0][0], queryString);
+            assert.strictEqual(dbMocks.dbConnectionMock.query.args[0][1], queryArgs);
+
+            const queryCallback = dbMocks.dbConnectionMock.query.args[0][2];
+            queryCallback(queryErr);
         });
     });
 
     describe('disconnectDb', () => {
         it('should disconnect from the database if there is a connection', () => {
-            databaseServiceLayer.connectToDatabase(() => {});
+            databaseServiceLayer.connectToDatabase();
 
             databaseServiceLayer.disconnectDb();
 
