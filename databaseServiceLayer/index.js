@@ -15,11 +15,7 @@ function connectToDatabase() {
 function query(sql, params) {
     return new Promise((resolve, reject) => {
         dbConnection.query(sql, params, (err, data) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(data);
-            }
+            err ? reject(err) : resolve(data);
         });
     });
 }
